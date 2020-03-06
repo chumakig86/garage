@@ -21,8 +21,12 @@ import java.util.Optional;
 @RequestMapping("/")
 @Api(value="Garage Management System", description="Operations pertaining to garage in Garage Management System")
 public class GarageController {
+    private final GarageRepository garageRepository;
+
     @Autowired
-    private GarageRepository garageRepository;
+    public GarageController(GarageRepository garageRepository) {
+        this.garageRepository = garageRepository;
+    }
 
     @ApiOperation(value = "Add a garage")
     @PostMapping(value= "createGarage")
@@ -50,19 +54,19 @@ public class GarageController {
 
     @ApiOperation(value = "Get garage by owners surname")
     @GetMapping(value= "/getbyOwnerSurname/{owner-surname}")
-    public Garage getByOwnerName(@PathVariable(value= "owner-surname") String surname) {
+    public List<Garage> getByOwnerSurName(@PathVariable(value= "owner-surname") String surname) {
         return garageRepository.findGarageByOwnerSurname(surname);
     }
 
     @ApiOperation(value = "Get garage by owners phonenumber")
     @GetMapping(value= "/getbyOwnerPhoneNumber/{owner-phonenumber}")
-    public Garage getByOwnerPhoneNumber(@PathVariable(value= "owner-phonenumber") String phoneNumber) {
+    public List<Garage> getByOwnerPhoneNumber(@PathVariable(value= "owner-phonenumber") String phoneNumber) {
         return garageRepository.findGarageByOwnerPhoneNumber(phoneNumber);
     }
 
     @ApiOperation(value = "Get garage by carnumber")
     @GetMapping(value= "/getbyCarNumber/{carnumber}")
-    public Garage getByCarNumber(@PathVariable(value= "carnumber") String carNumber) {
+    public List<Garage> getByCarNumber(@PathVariable(value= "carnumber") String carNumber) {
         return garageRepository.findGarageByCarNumber(carNumber);
     }
 
