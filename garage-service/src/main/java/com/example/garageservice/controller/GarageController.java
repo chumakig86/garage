@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/")
@@ -40,6 +41,29 @@ public class GarageController {
     @GetMapping("getGarages")
     public List<Garage> listGarages(){
         return garageRepository.findAll();
+    }
+
+    @GetMapping(value= "/getbyid/{garage-id}")
+    public Optional<Garage> getById(@PathVariable(value= "garage-id") String id) {
+        return garageRepository.findById(id);
+    }
+
+    @ApiOperation(value = "Get garage by owners surname")
+    @GetMapping(value= "/getbyOwnerSurname/{owner-surname}")
+    public Garage getByOwnerName(@PathVariable(value= "owner-surname") String surname) {
+        return garageRepository.findGarageByOwnerSurname(surname);
+    }
+
+    @ApiOperation(value = "Get garage by owners phonenumber")
+    @GetMapping(value= "/getbyOwnerPhoneNumber/{owner-phonenumber}")
+    public Garage getByOwnerPhoneNumber(@PathVariable(value= "owner-phonenumber") String phoneNumber) {
+        return garageRepository.findGarageByOwnerPhoneNumber(phoneNumber);
+    }
+
+    @ApiOperation(value = "Get garage by carnumber")
+    @GetMapping(value= "/getbyCarNumber/{carnumber}")
+    public Garage getByCarNumber(@PathVariable(value= "carnumber") String carNumber) {
+        return garageRepository.findGarageByCarNumber(carNumber);
     }
 
     @ApiOperation(value = "Update a garage")
