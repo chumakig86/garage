@@ -4,6 +4,8 @@ import com.example.garageservice.model.Garage;
 import com.example.garageservice.repository.GarageRepository;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,12 +31,17 @@ public class GarageController {
     }
 
     @ApiOperation(value = "Add a garage")
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad request")})
     @PostMapping(value= "createGarage")
-    public String createGarage(
+    public ResponseEntity createGarage(
             @ApiParam(value = "Garage object store in database", required = true)
             @Valid @RequestBody Garage garage) {
-        garageRepository.save(garage);
-        return "ok";
+        Optional<Garage> newGarage = garageRepository.findGarageByGarageNumber(garage.getGarageNumber());
+        if (newGarage.isPresent()) {
+            return ResponseEntity.badRequest().body("Garage already exist");
+
+        }
+        return new ResponseEntity<>(garageRepository.save(garage), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "View a list of available garages", response = List.class)
@@ -58,16 +65,23 @@ public class GarageController {
         return garageRepository.findGarageByOwnerSurname(surname);
     }
 
-    @ApiOperation(value = "Get garage by owners phonenumber")
+    @ApiOperation(value = "Get garage by owners phone number")
     @GetMapping(value= "/getbyOwnerPhoneNumber/{owner-phonenumber}")
     public List<Garage> getByOwnerPhoneNumber(@PathVariable(value= "owner-phonenumber") String phoneNumber) {
         return garageRepository.findGarageByOwnerPhoneNumber(phoneNumber);
     }
 
-    @ApiOperation(value = "Get garage by carnumber")
+    @ApiOperation(value = "Get garage by car number")
     @GetMapping(value= "/getbyCarNumber/{carnumber}")
     public List<Garage> getByCarNumber(@PathVariable(value= "carnumber") String carNumber) {
         return garageRepository.findGarageByCarNumber(carNumber);
+    }
+
+    @ApiOperation(value = "Get garage by garage number")
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad request")})
+    @GetMapping(value= "/getbyGarageNumber/{garagenumber}")
+    public ResponseEntity getByGarageNumber(@PathVariable(value= "garagenumber") Integer garageNumber) {
+        return ResponseEntity.ok(garageRepository.findGarageByGarageNumber(garageNumber));
     }
 
     @ApiOperation(value = "Update a garage")

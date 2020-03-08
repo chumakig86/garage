@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GarageRepository extends MongoRepository<Garage, String> {
@@ -16,4 +17,6 @@ public interface GarageRepository extends MongoRepository<Garage, String> {
     List<Garage> findGarageByOwnerPhoneNumber(String phoneNumber);
     @Query(value = "{'car.carNumber': ?0}")
     List<Garage> findGarageByCarNumber(String carNumber);
+    @Query(value = "{'garageNumber': ?0}")
+    Optional<Garage> findGarageByGarageNumber(Integer garageNumber);
 }
