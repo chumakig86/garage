@@ -80,8 +80,8 @@ public class GarageController {
     @ApiOperation(value = "Get garage by garage number")
     @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad request")})
     @GetMapping(value= "/getbyGarageNumber/{garagenumber}")
-    public ResponseEntity getByGarageNumber(@PathVariable(value= "garagenumber") Integer garageNumber) {
-        return ResponseEntity.ok(garageRepository.findGarageByGarageNumber(garageNumber));
+    public Optional<Garage> getByGarageNumber(@PathVariable(value= "garagenumber") Integer garageNumber) {
+        return garageRepository.findGarageByGarageNumber(garageNumber);
     }
 
     @ApiOperation(value = "Update a garage")
