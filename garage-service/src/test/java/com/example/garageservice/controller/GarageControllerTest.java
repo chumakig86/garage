@@ -7,6 +7,7 @@ import com.example.garageservice.model.Owner;
 import com.example.garageservice.util.BaseIntegrationTest;
 import org.junit.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@WithMockUser(value = "user")
 public class GarageControllerTest extends BaseIntegrationTest {
     private Owner owner = new Owner("Vasya", "Pupkin");
     private Contact contact = new Contact("2555555");
