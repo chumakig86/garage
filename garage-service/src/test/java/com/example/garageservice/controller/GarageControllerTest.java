@@ -11,7 +11,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WithMockUser(value = "user")
+@WithMockUser
 public class GarageControllerTest extends BaseIntegrationTest {
     private Owner owner = new Owner("Vasya", "Pupkin");
     private Contact contact = new Contact("2555555");
@@ -39,7 +38,10 @@ public class GarageControllerTest extends BaseIntegrationTest {
                 .perform(MockMvcRequestBuilders.post("/createGarage").accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON).content(jsonContent))
                 .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
-
+        List<Garage> resultGarageList = mongoTemplate.findAll(Garage.class);
+        Garage resultGarage = resultGarageList.get(0);
+        assertThat(resultGarageList.size(), is(1));
+        assertThat(resultGarage, is(testGarage));
     }
 
     @Test
@@ -92,10 +94,10 @@ public class GarageControllerTest extends BaseIntegrationTest {
       .andExpect(status().isOk())
       .andExpect(jsonPath("$").isArray())
       .andExpect(jsonPath("$", hasSize(2)))
-      .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", is("1")))
-      .andExpect(MockMvcResultMatchers.jsonPath("$[0].garageNumber", is(1)))
-                        .andExpect(MockMvcResultMatchers.jsonPath("$[1].id", is("2")))
-                        .andExpect(MockMvcResultMatchers.jsonPath("$[1].garageNumber", is(2)));
+      .andExpect(jsonPath("$[0].id", is("1")))
+      .andExpect(jsonPath("$[0].garageNumber", is(1)))
+                        .andExpect(jsonPath("$[1].id", is("2")))
+                        .andExpect(jsonPath("$[1].garageNumber", is(2)));
     }
 
     @Test
@@ -108,8 +110,8 @@ public class GarageControllerTest extends BaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", is("1")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].garageNumber", is(1)));
+                .andExpect(jsonPath("$[0].id", is("1")))
+                .andExpect(jsonPath("$[0].garageNumber", is(1)));
     }
 
     @Test
@@ -122,8 +124,8 @@ public class GarageControllerTest extends BaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", is("1")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].garageNumber", is(1)));
+                .andExpect(jsonPath("$[0].id", is("1")))
+                .andExpect(jsonPath("$[0].garageNumber", is(1)));
     }
 
     @Test
@@ -136,8 +138,8 @@ public class GarageControllerTest extends BaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", is("1")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].garageNumber", is(1)));
+                .andExpect(jsonPath("$[0].id", is("1")))
+                .andExpect(jsonPath("$[0].garageNumber", is(1)));
     }
 
     @Test
@@ -148,8 +150,8 @@ public class GarageControllerTest extends BaseIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", is("1")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.garageNumber", is(1)));
+                .andExpect(jsonPath("$.id", is("1")))
+                .andExpect(jsonPath("$.garageNumber", is(1)));
     }
 
     @Test
@@ -160,8 +162,8 @@ public class GarageControllerTest extends BaseIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", is("1")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.garageNumber", is(1)));
+                .andExpect(jsonPath("$.id", is("1")))
+                .andExpect(jsonPath("$.garageNumber", is(1)));
     }
 
     @Test
@@ -178,8 +180,8 @@ public class GarageControllerTest extends BaseIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", is("1")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.garageNumber", is(UPDATED_GARAGE_NUMBER)));
+                .andExpect(jsonPath("$.id", is("1")))
+                .andExpect(jsonPath("$.garageNumber", is(UPDATED_GARAGE_NUMBER)));
     }
 
     @Test
